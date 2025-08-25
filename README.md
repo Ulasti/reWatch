@@ -1,3 +1,3 @@
-# rewatch
+# reWatch
 
-A new Flutter project.
+A mobile movies and tv shows logger.

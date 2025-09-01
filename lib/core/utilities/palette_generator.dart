@@ -9,8 +9,8 @@ class PaletteColors {
   final Color? muted;
   final Color? lightMuted;
   final Color? darkMuted;
-  final Color? brightest; // highest luminance from sampled colors
-  final Color? darkest; // lowest luminance from sampled colors
+  final Color? brightest;
+  final Color? darkest;
 
   const PaletteColors({
     this.dominant,
@@ -25,15 +25,12 @@ class PaletteColors {
   });
 }
 
-/// Global extractor you can call from anywhere:
 class ColorPicker {
   ColorPicker._();
   static final ColorPicker instance = ColorPicker._();
 
-  // simple cache keyed by string (use image url or a custom key)
   final Map<String, PaletteColors> _cache = {};
 
-  /// Extract palette from an ImageProvider (or use fromUrl which caches by url).
   Future<PaletteColors> fromImageProvider(
     ImageProvider provider, {
     String? cacheKey,
@@ -49,7 +46,6 @@ class ColorPicker {
       maximumColorCount: maximumColorCount,
     );
 
-    // choose brightest/darkest by computeLuminance over sampled colors
     Color? brightest;
     Color? darkest;
     final sampled = palette.colors.toList();
@@ -77,7 +73,6 @@ class ColorPicker {
     return result;
   }
 
-  /// Convenience: extract from a network image URL (caches by URL)
   Future<PaletteColors> fromUrl(
     String url, {
     Size size = const Size(200, 100),
@@ -89,7 +84,6 @@ class ColorPicker {
     maximumColorCount: maximumColorCount,
   );
 
-  /// Clear cache (optional)
   void clearCache([String? key]) {
     if (key == null) {
       _cache.clear();

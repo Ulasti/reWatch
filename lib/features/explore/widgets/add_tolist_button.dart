@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rewatch/core/constants/app_colors.dart';
 
-class MainDetailButton extends StatelessWidget {
+class AddToListButton extends StatelessWidget {
   final String title;
-  const MainDetailButton({super.key, required this.title});
+  const AddToListButton({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rewatch/core/constants/app_colors.dart';
 import 'package:rewatch/features/explore/viewmodels/quickfilters.dart';
 
-class CustomAppBar extends StatelessWidget {
+class ExploreAppBar extends StatelessWidget {
   final void Function(Category category, Set<String> selectedFilters)?
   onFilterChanged;
-  const CustomAppBar({super.key, this.onFilterChanged});
+  const ExploreAppBar({super.key, this.onFilterChanged});
 
   @override
   Widget build(BuildContext context) {

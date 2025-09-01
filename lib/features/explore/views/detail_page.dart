@@ -5,10 +5,14 @@ import 'package:rewatch/core/utilities/palette_generator.dart';
 import 'package:rewatch/features/explore/models/tv_model.dart';
 import 'package:rewatch/features/explore/viewmodels/quickfilters.dart';
 import 'package:rewatch/features/explore/widgets/available_chip.dart';
+import 'package:rewatch/features/explore/widgets/detail_background.dart';
+import 'package:rewatch/features/explore/widgets/detail_poster.dart';
 import 'package:rewatch/features/explore/widgets/dynamic_appbar.dart';
-import 'package:rewatch/features/explore/widgets/main_detail_button.dart';
-import 'package:rewatch/features/explore/widgets/movie_carousel.dart';
+import 'package:rewatch/features/explore/widgets/genres.dart';
+import 'package:rewatch/features/explore/widgets/add_tolist_button.dart';
+import 'package:rewatch/features/explore/widgets/media_info.dart';
 import 'package:rewatch/features/explore/models/media_model.dart';
+import 'package:rewatch/features/explore/widgets/related_movies.dart';
 
 class DetailPage extends StatefulWidget {
   final dynamic media;
@@ -116,59 +120,19 @@ class _DetailPageState extends State<DetailPage> {
             controller: _scrollController,
             child: Stack(
               children: [
-                Positioned(
-                  top: posterHeight,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [start, end.withValues(alpha: 0.1)],
-                      ),
-                    ),
-                  ),
+                DetailBackground(
+                  posterHeight: posterHeight,
+                  start: start,
+                  end: end,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(
-                      height: posterHeight,
-                      width: double.infinity,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.network(
-                            backdropUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) =>
-                                Container(color: AppColors.Grey),
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            height: posterFadeHeight,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    start.withValues(alpha: 1),
-                                    start.withValues(alpha: 0.7),
-                                    start.withValues(alpha: 0.3),
-                                    start.withValues(alpha: 0.1),
-                                    Colors.transparent,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                    DetailPoster(
+                      posterHeight: posterHeight,
+                      backdropUrl: backdropUrl,
+                      posterFadeHeight: posterFadeHeight,
+                      start: start,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -189,134 +153,20 @@ class _DetailPageState extends State<DetailPage> {
                       child: SizedBox(
                         child: Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    '${_mediaDetails?.runtimeFormatted}',
-                                    style: TextStyle(
-                                      color: AppColors.textOnDark60,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    '|',
-                                    style: TextStyle(
-                                      color: AppColors.textOnDark60,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    _mediaDetails?.releaseYear ?? '',
-                                    style: TextStyle(
-                                      color: AppColors.textOnDark60,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    '|',
-                                    style: TextStyle(
-                                      color: AppColors.textOnDark60,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    'IMDb ${_mediaDetails?.voteAverageFormatted ?? '0.0'}',
-                                    style: TextStyle(
-                                      color: AppColors.textOnDark60,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            MediaInfo(mediaDetails: _mediaDetails),
                             SizedBox(height: 16),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                MainDetailButton(title: 'Add to Watchlist'),
+                                AddToListButton(title: 'Add to Watchlist'),
                                 SizedBox(width: 8),
-                                MainDetailButton(title: 'Mark as Watched'),
+                                AddToListButton(title: 'Mark as Watched'),
                               ],
                             ),
                             SizedBox(height: 8),
                             AvailableButton(),
-
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                _mediaDetails?.genres.join(' • ') ?? '',
-                                style: TextStyle(
-                                  color: AppColors.textOnDark60,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 2,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AnimatedSize(
-                                    duration: const Duration(milliseconds: 220),
-                                    curve: Curves.easeInOut,
-                                    child: ConstrainedBox(
-                                      constraints: _overviewExpanded
-                                          ? const BoxConstraints()
-                                          : const BoxConstraints(maxHeight: 48),
-                                      child: Text(
-                                        widget.media.overview,
-                                        softWrap: true,
-                                        overflow: TextOverflow.fade,
-                                        style: TextStyle(
-                                          color: AppColors.textOnDark70,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 0),
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () => setState(
-                                      () => _overviewExpanded =
-                                          !_overviewExpanded,
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: _overviewExpanded
-                                            ? 160.0
-                                            : 0,
-                                      ),
-                                      child: Text(
-                                        _overviewExpanded ? '⌃' : 'Show more',
-                                        style: TextStyle(
-                                          color: AppColors.textOnDark90,
-                                          fontSize: _overviewExpanded ? 20 : 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            Genres(mediaDetails: _mediaDetails),
+                            Overview(),
                             SizedBox(height: 20),
                             RelatedMovies(
                               upComingMovies: upComingMovies,
@@ -333,6 +183,54 @@ class _DetailPageState extends State<DetailPage> {
           ),
         );
       },
+    );
+  }
+
+  Overview() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedSize(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeInOut,
+            child: ConstrainedBox(
+              constraints: _overviewExpanded
+                  ? const BoxConstraints()
+                  : const BoxConstraints(maxHeight: 48),
+              child: Text(
+                widget.media.overview,
+                softWrap: true,
+                overflow: TextOverflow.fade,
+                style: TextStyle(
+                  color: AppColors.textOnDark70,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 0),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => setState(() => _overviewExpanded = !_overviewExpanded),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: _overviewExpanded ? 160.0 : 0,
+              ),
+              child: Text(
+                _overviewExpanded ? '⌃' : 'Show more',
+                style: TextStyle(
+                  color: AppColors.textOnDark90,
+                  fontSize: _overviewExpanded ? 20 : 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -391,44 +289,6 @@ class _DetailPageState extends State<DetailPage> {
             ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class RelatedMovies extends StatelessWidget {
-  const RelatedMovies({
-    super.key,
-    required this.upComingMovies,
-    required this.widget,
-  });
-
-  final Future<List> upComingMovies;
-  final DetailPage widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            SizedBox(width: 8),
-            Text(
-              'Related Movies',
-              style: TextStyle(
-                color: AppColors.textOnDark90,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        MovieCarousel(
-          popularMovies: upComingMovies,
-          title: '',
-          category: widget.category,
-        ),
-        SizedBox(height: 200),
       ],
     );
   }

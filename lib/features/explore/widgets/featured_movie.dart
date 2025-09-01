@@ -36,7 +36,6 @@ class TopMovieCarousel extends StatelessWidget {
           itemCount: items.length,
           itemBuilder: (context, index, movieIndex) {
             final item = items[index];
-            // Safely access title (Movies use title, TV shows use name)
             final title = (item is Tv) ? (item.name) : (item.title ?? '');
             final backdrop = item.backdrop_path;
             final imageUrl = 'https://image.tmdb.org/t/p/w1280$backdrop';
@@ -74,7 +73,7 @@ class TopMovieCarousel extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            title, // Now uses the safe title variable
+                            title,
                             maxLines: 2,
                             style: const TextStyle(
                               color: Colors.white,
@@ -118,7 +117,7 @@ class TopMovieCarousel extends StatelessWidget {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.Black.withAlpha(
                                       230,
-                                    ), // Fixed withValues to withAlpha
+                                    ),
                                     foregroundColor: AppColors.White,
                                     textStyle: const TextStyle(
                                       fontSize: 13,

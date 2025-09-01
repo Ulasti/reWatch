@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rewatch/core/constants/app_colors.dart';
 import 'package:rewatch/core/repositories/movie_repo.dart';
-import 'package:rewatch/features/explore/widgets/custom_appbar.dart';
+import 'package:rewatch/features/explore/widgets/explore_appbar.dart';
 import 'package:rewatch/features/explore/widgets/featured_movie.dart';
 import 'package:rewatch/features/explore/widgets/movie_carousel.dart';
 import 'package:rewatch/features/explore/viewmodels/quickfilters.dart';
@@ -66,7 +66,7 @@ class _ExploreViewState extends State<ExploreView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomAppBar(onFilterChanged: _onFilterChanged),
+                    ExploreAppBar(onFilterChanged: _onFilterChanged),
                     TopMovieCarousel(
                       upComingMovies: _upcomingFuture ?? Future.value([]),
                     ),

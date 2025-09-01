@@ -47,17 +47,12 @@ class MediaDetails {
       backdropPath: t.backdrop_path,
       releaseDate: t.first_air_date,
       voteAverage: t.vote_average,
-      runtime: t.episode_run_time.isNotEmpty
-          ? t.episode_run_time
-          : [
-              56,
-            ], // Fallback to 56min (or use t.last_episode_to_air?.runtime if available)
+      runtime: t.episode_run_time.isNotEmpty ? t.episode_run_time : [37],
       genres: t.genres,
     );
   }
 
   String get runtimeFormatted {
-    // ADD THIS
     if (runtime.isEmpty) return '0';
 
     if (runtime.length == 1) {

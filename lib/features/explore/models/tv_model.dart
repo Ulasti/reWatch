@@ -9,7 +9,7 @@ class Tv {
   String vote_average;
   String original_language;
   int id;
-  int episode_run_time;
+  List<int> episode_run_time;
   List<String> genres;
 
   Tv({
@@ -48,10 +48,15 @@ class Tv {
       vote_average: map['vote_average'].toString(),
       original_language: map['original_language'] ?? '',
       id: (map['id'] as num?)?.toInt() ?? 0,
-      episode_run_time: (map['episode_run_time'] as num?)?.toInt() ?? 0,
+      episode_run_time:
+          (map['episode_run_time'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
+              .toList() ??
+          [],
       genres: parseNames(map['genres'] as List?, 'name'),
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'adult': adult,
@@ -67,5 +72,35 @@ class Tv {
       'episode_run_time': episode_run_time,
       'genres': genres,
     };
+  }
+
+  Tv copyWith({
+    String? adult,
+    String? backdrop_path,
+    String? overview,
+    String? popularity,
+    String? poster_path,
+    String? first_air_date,
+    String? name,
+    String? vote_average,
+    String? original_language,
+    int? id,
+    List<int>? episode_run_time,
+    List<String>? genres,
+  }) {
+    return Tv(
+      adult: adult ?? this.adult,
+      backdrop_path: backdrop_path ?? this.backdrop_path,
+      overview: overview ?? this.overview,
+      popularity: popularity ?? this.popularity,
+      poster_path: poster_path ?? this.poster_path,
+      first_air_date: first_air_date ?? this.first_air_date,
+      name: name ?? this.name,
+      vote_average: vote_average ?? this.vote_average,
+      original_language: original_language ?? this.original_language,
+      id: id ?? this.id,
+      episode_run_time: episode_run_time ?? this.episode_run_time,
+      genres: genres ?? this.genres,
+    );
   }
 }

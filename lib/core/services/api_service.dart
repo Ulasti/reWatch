@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:rewatch/features/explore/models/movie_model.dart';
+import 'package:rewatch/features/explore/models/tv_model.dart';
 
 class ApiService {
   final String baseUrl;
@@ -59,7 +60,7 @@ class ApiService {
     Map<String, String>? queryParameters,
   }) async {
     final uri = Uri.parse(
-      '$baseUrl/$movieId',
+      '$baseUrl/movie/$movieId',
     ).replace(queryParameters: queryParameters);
     final response = await http.get(
       uri,
@@ -73,6 +74,28 @@ class ApiService {
     final Map<String, dynamic> data =
         jsonDecode(response.body) as Map<String, dynamic>;
     return Movies.fromMap(data);
+  }
+
+  Future<Tv> getTvDetails(
+    int tvId, {
+    Map<String, String>? headers,
+    Map<String, String>? queryParameters,
+  }) async {
+    final uri = Uri.parse(
+      '$baseUrl/tv/$tvId',
+    ).replace(queryParameters: queryParameters);
+    final response = await http.get(
+      uri,
+      headers: {...defaultHeaders, ...?headers},
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load TV details (${response.statusCode})');
+    }
+
+    final Map<String, dynamic> data =
+        jsonDecode(response.body) as Map<String, dynamic>;
+    return Tv.fromMap(data);
   }
 
   Future<void> delete(String endpoint, {Map<String, String>? headers}) async {

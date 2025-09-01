@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rewatch/core/constants/app_colors.dart';
 import 'package:rewatch/core/repositories/movie_repo.dart';
-import 'package:rewatch/features/explore/models/media_model.dart';
-import 'package:rewatch/features/explore/models/movie_model.dart';
 import 'package:rewatch/features/explore/widgets/custom_appbar.dart';
 import 'package:rewatch/features/explore/widgets/featured_movie.dart';
 import 'package:rewatch/features/explore/widgets/movie_carousel.dart';
 import 'package:rewatch/features/explore/viewmodels/quickfilters.dart';
 
 class ExploreView extends StatefulWidget {
-  final Movies? movie;
-  final bool isTv;
-  const ExploreView({super.key, this.movie, this.isTv = false});
+  const ExploreView({super.key});
 
   @override
   State<ExploreView> createState() => _ExploreViewState();
@@ -19,17 +15,14 @@ class ExploreView extends StatefulWidget {
 
 class _ExploreViewState extends State<ExploreView> {
   final MovieRepository repo = MovieRepository();
-  MediaDetails? _details;
-
   Category _activeCategory = Category.movies;
 
-  Future<List<Movies>>? _popularFuture;
-  Future<List<Movies>>? _topRatedFuture;
-  Future<List<Movies>>? _upcomingFuture;
+  Future<List<dynamic>>? _popularFuture;
+  Future<List<dynamic>>? _topRatedFuture;
+  Future<List<dynamic>>? _upcomingFuture;
 
   String get titlem =>
       _activeCategory == Category.movies ? 'Top Rated Movies' : 'Top Rated TV';
-
   String get titlep =>
       _activeCategory == Category.movies ? 'Popular Movies' : 'Popular TV';
 
@@ -37,7 +30,6 @@ class _ExploreViewState extends State<ExploreView> {
   void initState() {
     super.initState();
     _loadLists();
-    _loadDetails();
   }
 
   void _onFilterChanged(Category category, Set<String> _) {
@@ -54,38 +46,15 @@ class _ExploreViewState extends State<ExploreView> {
       _topRatedFuture = repo.getTopRatedMovies();
       _upcomingFuture = repo.getUpcomingMovies();
     } else {
-      _popularFuture = await repo.getPopularTv();
-      _topRatedFuture = await repo.getTopRatedTv();
-      _upcomingFuture = await repo.getOnTheAirTv();
+      _popularFuture = repo.getPopularTv();
+      _topRatedFuture = repo.getTopRatedTv();
+      _upcomingFuture = repo.getOnTheAirTv();
     }
-
     setState(() {});
-  }
-
-  Future<void> _loadDetails() async {
-    try {
-      if (widget.isTv) {
-        final tv = await repo.getTvDetails(widget.movie!.id);
-        if (!mounted) return;
-        setState(() => _details = MediaDetails.fromTv(tv));
-      } else {
-        final movie = await repo.getMovieDetails(widget.movie!.id);
-        if (!mounted) return;
-        setState(() => _details = MediaDetails.fromMovie(movie));
-      }
-    } catch (e) {
-      // handle error
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final displayTitle = _details?.title ?? widget.movie?.title;
-    final displayRuntime =
-        _details?.runtimeFormatted ?? widget.movie?.runtimeFormatted;
-    final displayYear = _details?.releaseYear ?? widget.movie?.releaseYear;
-    final displayVote =
-        _details?.voteAverageFormatted ?? widget.movie?.voteAverageFormatted;
     return Scaffold(
       backgroundColor: AppColors.Black,
       body: Padding(
@@ -101,7 +70,7 @@ class _ExploreViewState extends State<ExploreView> {
                     TopMovieCarousel(
                       upComingMovies: _upcomingFuture ?? Future.value([]),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     Text(
                       titlep,
                       style: TextStyle(
@@ -112,7 +81,10 @@ class _ExploreViewState extends State<ExploreView> {
                     ),
                     MovieCarousel(
                       popularMovies: _popularFuture ?? Future.value([]),
-                      isTv: _activeCategory == Category.tv,
+                      title: _activeCategory == Category.movies
+                          ? 'Popular Movies'
+                          : 'Popular TV',
+                      category: _activeCategory,
                     ),
                     Text(
                       titlem,
@@ -124,7 +96,10 @@ class _ExploreViewState extends State<ExploreView> {
                     ),
                     MovieCarousel(
                       popularMovies: _topRatedFuture ?? Future.value([]),
-                      isTv: _activeCategory == Category.tv,
+                      title: _activeCategory == Category.movies
+                          ? 'Top Rated Movies'
+                          : 'Top Rated TV',
+                      category: _activeCategory,
                     ),
                   ],
                 ),

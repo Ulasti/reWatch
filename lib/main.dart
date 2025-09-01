@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rewatch/core/repositories/movie_repo.dart';
-import 'package:rewatch/core/utilities/user_storage.dart';
 import 'package:rewatch/features/navigation/views/navigation_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  const String userId = 'local_user';
   runApp(const MainApp());
 }
 

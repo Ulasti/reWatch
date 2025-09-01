@@ -1,16 +1,15 @@
-// ...existing code...
 import 'package:rewatch/features/explore/models/movie_model.dart';
 import 'package:rewatch/features/explore/models/tv_model.dart';
 
 class MediaDetails {
   final int id;
-  final String title; // movie.title or tv.name
+  final String title;
   final String overview;
   final String posterPath;
   final String backdropPath;
-  final String releaseDate; // movie.release_date or tv.first_air_date
+  final String releaseDate;
   final String voteAverage;
-  final int runtime;
+  final List<int> runtime;
   final List<String> genres;
 
   MediaDetails({
@@ -34,7 +33,7 @@ class MediaDetails {
       backdropPath: m.backdrop_path,
       releaseDate: m.release_date,
       voteAverage: m.vote_average,
-      runtime: m.runtime,
+      runtime: [m.runtime],
       genres: m.genres,
     );
   }
@@ -48,14 +47,30 @@ class MediaDetails {
       backdropPath: t.backdrop_path,
       releaseDate: t.first_air_date,
       voteAverage: t.vote_average,
-      runtime: t.episode_run_time,
+      runtime: t.episode_run_time.isNotEmpty
+          ? t.episode_run_time
+          : [
+              56,
+            ], // Fallback to 56min (or use t.last_episode_to_air?.runtime if available)
       genres: t.genres,
     );
   }
 
   String get runtimeFormatted {
-    final r = runtime;
-    if (r <= 0) return '—';
+    // ADD THIS
+    if (runtime.isEmpty) return '0';
+
+    if (runtime.length == 1) {
+      final r = runtime[0];
+      if (r <= 0) return '—';
+      final hours = r ~/ 60;
+      final minutes = r % 60;
+      if (hours > 0) return minutes > 0 ? '${hours}h ${minutes}m' : '${hours}h';
+      return '${minutes}m';
+    }
+
+    final r = runtime[0];
+    if (r <= 0) return '-';
     final hours = r ~/ 60;
     final minutes = r % 60;
     if (hours > 0) return minutes > 0 ? '${hours}h ${minutes}m' : '${hours}h';

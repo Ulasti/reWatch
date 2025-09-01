@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rewatch/core/constants/app_colors.dart';
+import 'package:rewatch/features/watchlist/widgets/collections.dart';
+import 'package:rewatch/features/watchlist/widgets/search.dart';
 
 class WatchlistView extends StatefulWidget {
   const WatchlistView({super.key});
@@ -12,6 +13,7 @@ class _WatchlistViewState extends State<WatchlistView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -20,78 +22,17 @@ class _WatchlistViewState extends State<WatchlistView> {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'reWatch',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search your watchlist',
-                prefixIcon: Icon(Icons.search),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
-                  borderSide: BorderSide(color: Colors.black, width: 3),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
-                  borderSide: BorderSide(color: Colors.black, width: 3),
-                ),
+              'reWatch.',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
           ),
-
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GestureDetector(
-              onTap: () {
-                // Handle tap
-              },
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.black,
-                ),
-                child: Center(
-                  child: Text(
-                    'Movies',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textOnDark90,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                // Handle tap
-              },
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.black,
-                ),
-                child: Center(
-                  child: Text(
-                    'TV Series',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textOnDark90,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          Search(),
+          Collection(title: 'Movies.'),
+          Collection(title: 'TV Series.'),
         ],
       ),
     );

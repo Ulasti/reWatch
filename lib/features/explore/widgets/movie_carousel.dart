@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:rewatch/core/constants/app_colors.dart';
-import 'package:rewatch/features/explore/models/movie_model.dart';
 import 'package:rewatch/features/explore/views/detail_page.dart';
+import 'package:rewatch/features/explore/viewmodels/quickfilters.dart';
 
 class MovieCarousel extends StatelessWidget {
   const MovieCarousel({
     super.key,
     required this.popularMovies,
-    this.isTv = false,
+    required this.title,
+    required this.category,
   });
 
-  final Future<List<Movies>> popularMovies;
-  final bool isTv;
+  final Future<List<dynamic>> popularMovies;
+  final String title;
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Movies>>(
+    return FutureBuilder<List<dynamic>>(
       future: popularMovies,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -34,21 +36,21 @@ class MovieCarousel extends StatelessWidget {
         if (movies.isEmpty) return const SizedBox(height: 250);
 
         return SizedBox(
-          height: 270,
+          height: 250,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: movies.length,
             itemBuilder: (context, index) {
-              final movie = movies[index];
-              final poster = movie.poster_path;
-              final posterUrl = 'https://image.tmdb.org/t/p/w500$poster';
+              final item = movies[index];
+              final posterPath = item.poster_path;
+              final posterUrl = 'https://image.tmdb.org/t/p/w500$posterPath';
 
               return GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(
                     PageRouteBuilder(
                       pageBuilder: (_, __, ___) =>
-                          DetailPage(movie: movie, isTv: isTv),
+                          DetailPage(media: item, category: category),
                       transitionsBuilder: (_, anim, __, child) {
                         final fade = CurvedAnimation(
                           parent: anim,

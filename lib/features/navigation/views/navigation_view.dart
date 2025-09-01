@@ -38,7 +38,7 @@ class _NavigationViewState extends State<NavigationView> {
               size: 22,
             ),
             unselectedIconTheme: IconThemeData(
-              color: AppColors.textOnDark60.withOpacity(0.6),
+              color: AppColors.textOnDark60.withValues(alpha: 0.6),
               size: 20,
             ),
             currentIndex: navIndex,

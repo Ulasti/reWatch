@@ -1,63 +1,66 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:rewatch/core/constants/app_colors.dart';
-import 'package:rewatch/features/explore/models/movie_model.dart';
+import 'package:rewatch/features/explore/models/tv_model.dart';
 
 class TopMovieCarousel extends StatelessWidget {
   const TopMovieCarousel({super.key, required this.upComingMovies});
 
-  final Future<List<Movies>> upComingMovies;
+  final Future<List<dynamic>> upComingMovies;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Movies>>(
+    final screenW = MediaQuery.of(context).size.width;
+    final double aspectRatio = 16 / 9;
+    final double carouselHeight = screenW / aspectRatio;
+
+    return FutureBuilder<List<dynamic>>(
       future: upComingMovies,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox(
-            height: 180,
+          return SizedBox(
+            height: carouselHeight,
             child: Center(child: CircularProgressIndicator()),
           );
         }
         if (snapshot.hasError) {
           return SizedBox(
-            height: 180,
+            height: carouselHeight,
             child: Center(child: Text('Error: ${snapshot.error}')),
           );
         }
-        final movies = snapshot.data ?? [];
-        if (movies.isEmpty) return const SizedBox(height: 180);
+        final items = snapshot.data ?? [];
+        if (items.isEmpty) return SizedBox(height: carouselHeight);
 
         return CarouselSlider.builder(
-          itemCount: movies.length,
+          itemCount: items.length,
           itemBuilder: (context, index, movieIndex) {
-            final movie = movies[index];
-            final title = movie.title;
-            final backdrop = movie.backdrop_path;
-            final imageUrl = 'https://image.tmdb.org/t/p/w780$backdrop';
+            final item = items[index];
+            // Safely access title (Movies use title, TV shows use name)
+            final title = (item is Tv) ? (item.name) : (item.title ?? '');
+            final backdrop = item.backdrop_path;
+            final imageUrl = 'https://image.tmdb.org/t/p/w1280$backdrop';
 
             return Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(3.0),
               child: Container(
-                width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(5),
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.Primary,
-                      spreadRadius: 1,
-                      blurRadius: 2,
+                      spreadRadius: 0.3,
+                      blurRadius: 1,
                       offset: Offset(0, 0),
                     ),
                   ],
-                  color: AppColors.Grey,
+                  color: Colors.transparent,
                 ),
-
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(5),
                       child: Image.network(
                         imageUrl,
                         fit: BoxFit.cover,
@@ -65,25 +68,24 @@ class TopMovieCarousel extends StatelessWidget {
                             Container(color: AppColors.Grey),
                       ),
                     ),
-
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Text(
-                            title,
-                            maxLines: 3,
+                            title, // Now uses the safe title variable
+                            maxLines: 2,
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
-                              fontSize: 45,
+                              fontSize: 30,
                             ),
                           ),
                         ),
                         SizedBox(height: 5),
                         Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Container(
                             height: 35,
                             width: 250,
@@ -114,9 +116,9 @@ class TopMovieCarousel extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: () {},
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.Black.withValues(
-                                      alpha: 0.9,
-                                    ),
+                                    backgroundColor: AppColors.Black.withAlpha(
+                                      230,
+                                    ), // Fixed withValues to withAlpha
                                     foregroundColor: AppColors.White,
                                     textStyle: const TextStyle(
                                       fontSize: 13,
@@ -146,10 +148,12 @@ class TopMovieCarousel extends StatelessWidget {
             );
           },
           options: CarouselOptions(
-            autoPlay: false,
+            height: carouselHeight,
+            viewportFraction: 0.9,
+            autoPlay: true,
             enlargeCenterPage: true,
             aspectRatio: 1,
-            autoPlayInterval: const Duration(seconds: 10),
+            autoPlayInterval: const Duration(seconds: 7),
           ),
         );
       },

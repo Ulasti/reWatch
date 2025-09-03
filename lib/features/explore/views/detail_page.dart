@@ -40,17 +40,16 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
+
     _loadDetails();
     _scrollController.addListener(_onScroll);
-    // Set initial MediaDetails from widget.media
     _mediaDetails = (widget.media is Tv)
         ? MediaDetails.fromTv(widget.media)
         : MediaDetails.fromMovie(widget.media);
-    // Set upcoming based on category (no cast needed)
     if (widget.category == Category.movies) {
       upComingMovies = repo.getUpcomingMovies();
     } else {
-      upComingMovies = repo.getOnTheAirTv(); // Remove 'as Future<List<Movies>>'
+      upComingMovies = repo.getOnTheAirTv();
     }
   }
 
@@ -106,7 +105,7 @@ class _DetailPageState extends State<DetailPage> {
         final palette = snap.data;
         final Color start = palette?.darkest ?? Colors.black;
         final Color end =
-            palette?.darkMuted ?? Colors.white.withValues(alpha: 0.06);
+            palette?.lightVibrant ?? Colors.white.withValues(alpha: 0.06);
 
         return Scaffold(
           backgroundColor: Colors.black,
@@ -158,9 +157,17 @@ class _DetailPageState extends State<DetailPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                AddToListButton(title: 'Add to Watchlist'),
+                                AddToListButton(
+                                  title: 'Add to Watchlist',
+                                  media: widget.media,
+                                  category: widget.category,
+                                ),
                                 SizedBox(width: 8),
-                                AddToListButton(title: 'Mark as Watched'),
+                                AddToListButton(
+                                  title: 'Mark as Watched',
+                                  media: widget.media,
+                                  category: widget.category,
+                                ),
                               ],
                             ),
                             SizedBox(height: 8),

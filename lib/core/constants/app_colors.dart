@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color Primary = Color.fromARGB(255, 238, 238, 238);
+  static const Color Primary = Color.fromARGB(255, 223, 223, 225);
   static const Color Primary50 = Color(0x80eeeeee);
   static const Color Primary80 = Color(0xcceeeeee);
   static const Color White = Color(0xFFffffff);
@@ -16,4 +16,8 @@ class AppColors {
   static const Color textOnDark70 = Color(0xb3ffffff);
   static const Color textOnDark80 = Color(0xccffffff);
   static const Color textOnDark90 = Color(0xe6ffffff);
+  static const Color Shadow1 = Color(0x99aeaec0);
+  static const Color Shadow2 = Color(0x40aeaec0);
+  static const Color Shadow3 = Color(0xb3ffffff);
+  static const Color Shadow4 = Color(0xa3ffffff);
 }

@@ -89,19 +89,35 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  flex_color_scheme:
+    dependency: "direct main"
+    description:
+      name: flex_color_scheme
+      sha256: "034d5720747e6af39b2ad090d82dd92d33fde68e7964f1814b714c9d49ddbd64"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.3.0"
+  flex_seed_scheme:
+    dependency: transitive
+    description:
+      name: flex_seed_scheme
+      sha256: b06d8b367b84cbf7ca5c5603c858fa5edae88486c4e4da79ac1044d73b6c62ec
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.1"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_inset_box_shadow_update:
+  flutter_inset_shadow:
     dependency: "direct main"
     description:
-      name: flutter_inset_box_shadow_update
-      sha256: "91c912d01c049e761d0b7e9d81061acc62677f33bdde4e854257f1b10d8f0821"
+      name: flutter_inset_shadow
+      sha256: "5978b67f028c7ca3566516eda14f0a25a5ce13c0fa21a86a48a0b00faa7db9d7"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "2.0.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -216,6 +232,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  oc_liquid_glass:
+    dependency: "direct main"
+    description:
+      name: oc_liquid_glass
+      sha256: ca255faaf7c070d611e2b91c237f9a8f4f4627554c29f4f075c34a61ce0c64c4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   palette_generator:
     dependency: "direct main"
     description:
@@ -455,4 +479,4 @@ packages:
     version: "1.1.0"
 sdks:
   dart: ">=3.9.0 <4.0.0"
-  flutter: ">=3.29.0"
+  flutter: ">=3.35.0"

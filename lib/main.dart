@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rewatch/features/navigation/views/navigation_view.dart';
 import 'package:rewatch/core/utilities/user_storage.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,11 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
-    return NavigationView();
+    return MaterialApp(
+      theme: FlexThemeData.light(scheme: FlexScheme.hippieBlue),
+      darkTheme: FlexThemeData.dark(scheme: FlexScheme.redWine),
+      themeMode: ThemeMode.system,
+      home: const NavigationView(),
+    );
   }
 }

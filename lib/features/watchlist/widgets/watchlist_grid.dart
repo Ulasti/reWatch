@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
-import 'package:flutter_inset_box_shadow_update/flutter_inset_box_shadow_update.dart';
+import 'package:flutter_inset_shadow/flutter_inset_shadow.dart';
 import 'package:provider/provider.dart';
 import 'package:rewatch/core/utilities/user_storage.dart';
 import 'package:rewatch/core/repositories/movie_repo.dart';
 import 'package:rewatch/features/explore/viewmodels/quickfilters.dart';
 import 'package:rewatch/features/explore/views/detail_page.dart';
-import 'package:rewatch/features/watchlist/widgets/nbackground.dart';
 
 class WatchlistGrid extends StatelessWidget {
   final String listType;
   final Category category;
+  final double topPadding;
 
   const WatchlistGrid({
     super.key,
     required this.listType,
     required this.category,
+    this.topPadding = 120.0,
   });
 
   Future<List<int>> _getList(UserStorage userStorage) {
@@ -50,12 +51,17 @@ class WatchlistGrid extends StatelessWidget {
               return const Center(child: Text('No items in this list'));
             }
             return GridView.builder(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 16,
+                top: topPadding, // Use the topPadding parameter
+              ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.6, // Poster aspect
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 0.6,
               ),
               itemCount: ids.length > 30 ? 30 : ids.length,
               itemBuilder: (context, index) {
@@ -67,10 +73,10 @@ class WatchlistGrid extends StatelessWidget {
                   builder: (context, detailSnapshot) {
                     if (detailSnapshot.connectionState ==
                         ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: Text(' '));
                     }
                     if (detailSnapshot.hasError || !detailSnapshot.hasData) {
-                      return const Center(child: Text('Error'));
+                      return const Center(child: Text(' '));
                     }
                     final item = detailSnapshot.data!;
                     final posterUrl = item.poster_path != null
@@ -84,34 +90,33 @@ class WatchlistGrid extends StatelessWidget {
                               DetailPage(media: item, category: category),
                         ),
                       ),
-                      child: Stack(
+
+                      child: Column(
                         children: [
-                          Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    image: posterUrl != null
-                                        ? DecorationImage(
-                                            image: NetworkImage(posterUrl),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : null,
-                                    color: posterUrl == null
-                                        ? Colors.grey
-                                        : null,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 4,
-                                        offset: Offset(2, 2),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                image: posterUrl != null
+                                    ? DecorationImage(
+                                        image: NetworkImage(posterUrl),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
+                                color: posterUrl == null ? Colors.grey : null,
+                                boxShadow: posterUrl != null
+                                    ? [
+                                        BoxShadow(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceTint,
+                                          blurRadius: 5,
+                                          offset: Offset(0, 0),
+                                        ),
+                                      ]
+                                    : null,
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
